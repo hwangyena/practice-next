@@ -3,9 +3,9 @@ import type { AppProps } from 'next/app'
 import GlobalState from '../store'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <GlobalState.Provider>
+  return (<GlobalState.Provider>
   <Component {...pageProps} />
-  </GlobalState.Provider>
+  </GlobalState.Provider>)
 }
 
 export default MyApp
