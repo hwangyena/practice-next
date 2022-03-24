@@ -1,21 +1,20 @@
-import axios from "axios"
+import axios, { AxiosResponse } from 'axios';
 
-const path = 'https://gorest.co.in/public';
+// export const getFetch = <UserType>(url: string): Promise<UserType> => {
+// export const getFetch: Fetcher<UserType[]> = (url: string) => {
+export const getFetch = (url: string) => {
+  console.log('fetch', url);
 
-export const getFetch = async (url: string)=>{
-  const res = await axios.get(`${path}${url}`);
-
-  // SUCCESS
-  if(Math.floor(res.status / 100) ===2){
-      return res.data;
-  }
-
-  const error:FetchErrorType = {
-      status: res.status,
-      statusText: res.statusText,
-      code: 'Error',
-      isFetchError: true,
-  };
-  
-  return alert('error');
-}
+  return axios
+    .get(`https://gorest.co.in/public${url}`)
+    .then((res) => res.data)
+    .catch(() => {
+      return alert('error');
+    });
+  // return axios
+  //   .get(`https://gorest.co.in/public${url}`)
+  //   .then((res: AxiosResponse<UserType[] | undefined>)=>res.data)
+  //   .catch(() => {
+  //     return alert('error');
+  //   });
+};
