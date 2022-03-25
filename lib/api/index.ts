@@ -1,20 +1,12 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { Fetcher } from 'swr';
 
-// export const getFetch = <UserType>(url: string): Promise<UserType> => {
-// export const getFetch: Fetcher<UserType[]> = (url: string) => {
-export const getFetch = (url: string) => {
-  console.log('fetch', url);
-
+export const getUsers: Fetcher<UserType[]> = (url: string) => {
   return axios
     .get(`https://gorest.co.in/public${url}`)
-    .then((res) => res.data)
-    .catch(() => {
-      return alert('error');
+    .then((res: AxiosResponse<UserType[]>) => res.data)
+    .catch((e: AxiosError) => {
+      alert(`error ${e}`);
+      return [];
     });
-  // return axios
-  //   .get(`https://gorest.co.in/public${url}`)
-  //   .then((res: AxiosResponse<UserType[] | undefined>)=>res.data)
-  //   .catch(() => {
-  //     return alert('error');
-  //   });
 };

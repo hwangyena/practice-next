@@ -20,3 +20,9 @@ type UserType = {
   gender: GenderType;
   status: string;
 };
+
+type ProfileType = {
+  name: string;
+  phone: string;
+  comment: string;
+};
