@@ -1,9 +1,22 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import GlobalState from '../store'
-import styles from '../styles/Home.module.css'
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import { useReducer } from 'react';
+import GlobalState from '../store';
+import styles from '../styles/Home.module.css';
+
+
+interface IProfileUpdateAction {
+  type: 'UPDATE' | 'DELETE'
+}
+
+const profileReducer = (state: UserType, action:  IProfileUpdateAction ) => {
+  switch (action.type) {
+    case 'UPDATE': return state.
+  }
+}
 
 const Home: NextPage = () => {
+  const [profile, dispatchProfile] = useReducer(profileReducer, {});
   const store = GlobalState.useContainer();
 
   return (
@@ -14,11 +27,18 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        {store.visible && <div>hello</div>}
-        <button onClick={()=>store.toogleVisible()}>click me!</button>
+        <section className="mb-3">
+          <h3>globalstate using unstated-next</h3>
+          {store.visible && <div>hello</div>}
+          <button onClick={() => store.toogleVisible()}>click me!</button>
+        </section>
+        <section>
+          <h3>useReducer</h3>
+
+        </section>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
