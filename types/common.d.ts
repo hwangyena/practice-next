@@ -16,13 +16,7 @@ type GenderType = 'male' | 'female';
 type UserType = {
   id: number;
   name: string;
-  eamil: string;
+  email: string;
   gender: GenderType;
-  status: string;
-};
-
-type ProfileType = {
-  name: string;
-  phone: string;
-  comment: string;
+  status?: string;
 };

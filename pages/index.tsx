@@ -4,20 +4,46 @@ import { useReducer } from 'react';
 import GlobalState from '../store';
 import styles from '../styles/Home.module.css';
 
-
 interface IProfileUpdateAction {
-  type: 'UPDATE' | 'DELETE'
+  type: 'UPDATE' | 'DELETE' | 'RESET';
+  name: string;
+  value: string;
 }
 
-const profileReducer = (state: UserType, action:  IProfileUpdateAction ) => {
+const profileReducer = (state: UserType, action: IProfileUpdateAction) => {
+  console.log('action', action.value);
+
   switch (action.type) {
-    case 'UPDATE': return state.
+    case 'UPDATE':
+      return {
+        ...state,
+        [action.name]: action.value,
+      };
+    case 'DELETE':
+      return {
+        ...state,
+        [action.name]: '',
+      };
+    default:
+      return state;
   }
-}
+};
+
+const profileInitial: UserType = {
+  email: '',
+  gender: 'male',
+  id: 1,
+  name: '',
+  status: '',
+};
 
 const Home: NextPage = () => {
-  const [profile, dispatchProfile] = useReducer(profileReducer, {});
+  const [profile, dispatchProfile] = useReducer(profileReducer, profileInitial);
   const store = GlobalState.useContainer();
+
+  const onChangeProfile = (name: keyof UserType, value: string) => {
+    dispatchProfile({ name, type: 'UPDATE', value });
+  };
 
   return (
     <div className={styles.container}>
@@ -34,7 +60,20 @@ const Home: NextPage = () => {
         </section>
         <section>
           <h3>useReducer</h3>
-
+          <div className="flex gap-3 flex-col w-[150px]">
+            <label className="flex whitespace-nowrap gap-3">
+              이름
+              <input type="text" value={profile.name} onChange={(e) => onChangeProfile('name', e.target.value)} />
+            </label>
+            <label className="flex whitespace-nowrap gap-3">
+              이메일
+              <input type="text" value={profile.email} onChange={(e) => onChangeProfile('email', e.target.value)} />
+            </label>
+            <label className="flex whitespace-nowrap gap-3">
+              성별
+              <input type="text" value={profile.gender} onChange={(e) => onChangeProfile('gender', e.target.value)} />
+            </label>
+          </div>
         </section>
       </main>
     </div>
