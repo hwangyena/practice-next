@@ -9,7 +9,6 @@ export default function UserPage() {
   const [num, setNum] = useState('');
 
   const { data } = useUser();
-  const { mutate } = useSWRConfig();
 
   const handleUser = async () => {
     const newUser = await getUsers(`/v2/users?id=${num}`);
