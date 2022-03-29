@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { getUsers } from '../lib/api';
+import { fetchAxios, getUsers } from '../lib/api';
 import { useUser } from '../lib/api/user';
 import { transGender } from '../lib/function/tranform';
 

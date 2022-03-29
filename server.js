@@ -1,7 +1,6 @@
 const express = require('express');
-const next = require('next');
-
 const { createProxyMiddleware } = require('http-proxy-middleware');
+const next = require('next');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -13,34 +12,27 @@ app
     const server = express();
 
     const HOST = 'https://gorest.co.in/public';
-    const PORT = process.env.PORT || 4000;
-
-    console.log('host', HOST);
+    const PORT = process.env.PORT || 3000;
 
     server.use(
-      '*',
+      '/api/*',
       createProxyMiddleware({
         target: HOST,
         changeOrigin: true,
+        pathRewrite: { '^/api': '' },
       })
     );
-
-    server.get('*', (req, res) => {
-      return handle(req, res);
-    });
 
     server.all('*', (req, res) => {
       return handle(req, res);
     });
 
-    server.listen(PORT, (e) => {
-      if (e) {
-        throw e;
-      }
-      console.log(`Ready on http://localhost:${PORT}`);
+    server.listen(PORT, (err) => {
+      if (err) throw err;
+      console.log(`> Ready on http://localhost:${PORT}`);
     });
   })
-  .catch((e) => {
-    console.log('error', e.stack);
+  .catch((err) => {
+    console.log('[ERROR] ', err);
     process.exit(1);
   });
