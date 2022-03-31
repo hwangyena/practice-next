@@ -1,23 +1,23 @@
 import { useEffect, useState } from 'react';
-import useSWR, { useSWRConfig } from 'swr';
-import { fetchAxios, getUsers } from '../lib/api';
+import { UserTable } from '../components/user';
+import { getUsers } from '../lib/api';
 import { useUser } from '../lib/api/user';
-import { transGender } from '../lib/function/tranform';
+import { UserStore } from '../store';
 
 export default function UserPage() {
-  const [users, setUsers] = useState<UserType[]>([]);
   const [num, setNum] = useState('');
+  const [users, setUsers] = useState<UserType[]>([]);
 
   const { data } = useUser();
+
+  useEffect(() => {
+    data && setUsers(data);
+  }, [data]);
 
   const handleUser = async () => {
     const newUser = await getUsers(`/v2/users?id=${num}`);
     setUsers(newUser);
   };
-
-  useEffect(() => {
-    data && setUsers(data);
-  }, [data]);
 
   return (
     <>
@@ -41,30 +41,9 @@ export default function UserPage() {
         <button onClick={handleUser}>조회하기</button>
         <br />
         <h3>사용자 목록</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>아이디</th>
-              <th>이름</th>
-              <th>성별</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users ? (
-              users.map((v) => (
-                <tr key={v.id}>
-                  <td>{v.id}</td>
-                  <td>{v.name}</td>
-                  <td>{transGender(v.gender)}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td>사용자가 없습니다.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+        <UserStore.Provider>
+          <UserTable {...{ users }} />
+        </UserStore.Provider>
       </main>
     </>
   );

@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useReducer } from 'react';
-import GlobalState from '../store';
+import { GlobalStore } from '../store';
 import styles from '../styles/Home.module.css';
 
 interface IProfileUpdateAction {
@@ -39,7 +39,7 @@ const profileInitial: UserType = {
 
 const Home: NextPage = () => {
   const [profile, dispatchProfile] = useReducer(profileReducer, profileInitial);
-  const store = GlobalState.useContainer();
+  const store = GlobalStore.useContainer();
 
   const onChangeProfile = (name: keyof UserType, value: string) => {
     dispatchProfile({ name, type: 'UPDATE', value });

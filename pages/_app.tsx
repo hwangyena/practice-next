@@ -1,11 +1,14 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import GlobalState from '../store'
+import '../styles/globals.css';
+import type { AppProps } from 'next/app';
+import { GlobalStore } from '../store';
+import { Suspense } from 'react';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return (<GlobalState.Provider>
-  <Component {...pageProps} />
-  </GlobalState.Provider>)
+  return (
+    <GlobalStore.Provider>
+      <Component {...pageProps} />
+    </GlobalStore.Provider>
+  );
 }
 
-export default MyApp
+export default MyApp;
