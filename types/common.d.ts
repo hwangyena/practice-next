@@ -16,7 +16,26 @@ type GenderType = 'male' | 'female';
 type UserType = {
   id: number;
   name: string;
-  email: string;
   gender: GenderType;
-  status?: string;
+  email: string;
+  status: string;
+};
+
+type AirlineType = {
+  id: number;
+  country: string;
+  established: string;
+  head_quaters: string;
+  logo: string;
+  name: string;
+  slogan: string;
+  website: string;
+  _id: string;
+};
+
+type PassengerType = {
+  id: string;
+  airline: AirlineType[];
+  name: string;
+  trips: number;
 };

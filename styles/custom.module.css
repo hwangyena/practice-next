@@ -1,3 +1,4 @@
+/* modal - close button  */
 .close-button {
   width: 30px;
   height: 30px;
@@ -20,4 +21,29 @@
 }
 .close-button > span:last-child {
   transform: translateY(15px) rotate(-45deg);
+}
+
+/* pagination  */
+.pagination {
+  width: 100%;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination > a {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  text-indent: 0;
+  box-sizing: border-box;
+  border: 1px solid #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.pagination > a:hover {
+  border-color: #777;
 }

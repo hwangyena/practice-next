@@ -1,4 +1,4 @@
-import { MouseEventHandler } from 'react';
+import { memo, MouseEventHandler } from 'react';
 import styles from '../../styles/custom.module.css';
 
 type Props = {
@@ -14,4 +14,4 @@ const CustomCloseButton = ({ onClose }: Props) => {
   );
 };
 
-export default CustomCloseButton;
+export default memo(CustomCloseButton);

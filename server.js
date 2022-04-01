@@ -11,7 +11,8 @@ app
   .then(() => {
     const server = express();
 
-    const HOST = 'https://gorest.co.in/public';
+    // const HOST = 'https://gorest.co.in/public';
+    const HOST = 'https://api.instantwebtools.net';
     const PORT = process.env.PORT || 3000;
 
     server.use(

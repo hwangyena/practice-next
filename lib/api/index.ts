@@ -1,19 +1,19 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Fetcher } from 'swr';
-
-/** 사용자 데이터 연동 with SWR */
-export const getUsers: Fetcher<UserType[]> = async (url: string) => {
-  const res = await axios({ url, method: 'get', baseURL: '/api' });
-  return res.data;
-};
 
 export enum METHOD {
   GET = 'get',
   POST = 'post',
 }
 
+/** passenger 데이터 연동 */
+export const getPassenger = async (url: string, params: IApiParams): Promise<IApiRes> => {
+  const res = await axios({ url, method: 'GET', baseURL: '/api', params });
+
+  return res;
+};
+
 /** axios 데이터 연동(GET, POST) */
-export const fetchAxios = async (path: string, method?: METHOD): Promise<AxiosResponse<UserType[]>> => {
+export const fetchAxios = async (path: string, method?: METHOD): Promise<AxiosResponse<IApiRes[]>> => {
   const axiosConfig: AxiosRequestConfig = {
     method,
     url: path,

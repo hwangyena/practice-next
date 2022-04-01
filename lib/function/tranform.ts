@@ -9,17 +9,21 @@ export const transGender = (v: GenderType | undefined | null) => {
   }
 };
 
-export const transUserLabelToKor = (v: string) => {
+export const transPassengerLabelToKor = (v: string) => {
   switch (v) {
-    case 'id':
-      return '아이디';
+    case 'country':
+      return '도착지';
+    case 'established':
+      return '출시일';
+    case 'head_quaters':
+      return '편명';
     case 'name':
-      return '이름';
-    case 'email':
-      return '이메일';
-    case 'gender':
-      return '성별';
-    case 'status':
-      return '상태';
+      return '비행기명';
+    case 'slogan':
+      return '슬로건';
+    case 'website':
+      return '웹사이트';
+    default:
+      '-';
   }
 };
