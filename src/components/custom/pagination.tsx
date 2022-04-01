@@ -43,20 +43,26 @@ const Pagination = ({ total, currentPage, onPageChange }: Props) => {
     onPageChange(page);
   };
 
-  /** 한 칸씩 이동 */
+  /** 한 페이지 이동 */
   const handlePrevNextClicked = (moved: -1 | 1) => {
-    if (current === 1 && moved === -1) {
-      return;
+    const targetGrp = getPageGroup();
+
+    let targetPageNo = (moved === 1 ? targetGrp[targetGrp.length - 1] : targetGrp[0]) + moved;
+
+    if (targetPageNo < 1) {
+      targetPageNo = 1;
     }
-    if (current === total && moved === 1) {
+    if (targetPageNo > total) {
+      targetPageNo = total;
+    }
+
+    if (targetPageNo === current) {
       return;
     }
 
-    setCurrent(current + moved);
-    onPageChange(current + moved);
+    setCurrent(targetPageNo);
+    onPageChange(targetPageNo);
   };
-
-  console.log('total', total);
 
   useEffect(() => {
     currentPage && setCurrent(currentPage);
@@ -79,7 +85,7 @@ const Pagination = ({ total, currentPage, onPageChange }: Props) => {
         <>
           <CustomArrow onClick={() => handlePrevNextClicked(1)} active={current !== total} type="forward" />
           <CustomArrow
-            onClick={() => current !== total - 1 && handlePageClick(total)}
+            onClick={() => current !== total && handlePageClick(total)}
             active={current !== total}
             type="double-forward"
           />
