@@ -45,5 +45,9 @@
 }
 
 .pagination > a:hover {
-  border-color: #777;
+  border-color: #444;
+}
+
+.pagination > .selected {
+  font-weight: 700;
 }
