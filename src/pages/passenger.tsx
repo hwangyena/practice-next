@@ -11,7 +11,7 @@ export default function UserPage() {
 
   const total = useRef(0);
 
-  const params = { page: current, size: PAGE_LIST_PER_ONCE };
+  const params = { page: current - 1, size: PAGE_LIST_PER_ONCE };
   const res = useSWR<IApiRes | undefined>(['/v1/passenger', params], (url: string) => getPassenger(url, params));
 
   useEffect(() => {

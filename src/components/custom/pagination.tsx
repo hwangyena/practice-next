@@ -1,14 +1,15 @@
 import { memo, useEffect, useState } from 'react';
 import cn from 'classnames';
 import styles from 'src/styles/custom.module.css';
+import CustomArrow from './arrow';
 
 type Props = {
   currentPage?: number; // default 1
-  total: number; // 전체 데이터 개수
+  total: number; // total 페이지 수
   onPageChange: (page: number) => void;
 };
 
-export const PAGE_LIST_PER_ONCE = 5;
+export const PAGE_LIST_PER_ONCE = 10;
 
 const Pagination = ({ total, currentPage, onPageChange }: Props) => {
   const isArrow = total > PAGE_LIST_PER_ONCE;
@@ -25,8 +26,7 @@ const Pagination = ({ total, currentPage, onPageChange }: Props) => {
 
     for (let i = 1; i <= PAGE_LIST_PER_ONCE; i += 1) {
       const pageNo = currentPageGrp * PAGE_LIST_PER_ONCE + i;
-      const pageTotalCount = Math.floor(total / PAGE_LIST_PER_ONCE); // 총 생성될 페이지 수
-      if (pageNo > pageTotalCount) break;
+      if (pageNo > total) break;
       page.push(pageNo);
     }
 
@@ -43,19 +43,48 @@ const Pagination = ({ total, currentPage, onPageChange }: Props) => {
     onPageChange(page);
   };
 
+  /** 한 칸씩 이동 */
+  const handlePrevNextClicked = (moved: -1 | 1) => {
+    if (current === 1 && moved === -1) {
+      return;
+    }
+    if (current === total && moved === 1) {
+      return;
+    }
+
+    setCurrent(current + moved);
+    onPageChange(current + moved);
+  };
+
+  console.log('total', total);
+
   useEffect(() => {
     currentPage && setCurrent(currentPage);
   }, [currentPage]);
 
   return (
     <div className={styles.pagination}>
-      {isArrow && <></>}
+      {isArrow && (
+        <>
+          <CustomArrow onClick={() => current !== 1 && handlePageClick(1)} active={current !== 1} type="double-back" />
+          <CustomArrow onClick={() => handlePrevNextClicked(-1)} active={current !== 1} type="back" />
+        </>
+      )}
       {getPageGroup().map((v) => (
         <a key={v} className={cn({ [styles.selected]: v === current })} onClick={() => handlePageClick(v)}>
           <span>{v}</span>
         </a>
       ))}
-      {isArrow && <></>}
+      {isArrow && (
+        <>
+          <CustomArrow onClick={() => handlePrevNextClicked(1)} active={current !== total} type="forward" />
+          <CustomArrow
+            onClick={() => current !== total - 1 && handlePageClick(total)}
+            active={current !== total}
+            type="double-forward"
+          />
+        </>
+      )}
     </div>
   );
 };
