@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react';
-import { transGender, transPassengerLabelToKor } from '../../lib/function/tranform';
-import { CustomCloseButton } from '../custom';
+import { transPassengerLabelToKor } from '../../lib/function/tranform';
+import { CloseButton } from '../custom';
 
 type Props = {
   passenger: PassengerType;
@@ -13,7 +13,7 @@ const PassengerDetailPopup = ({ passenger, handleClick }: Props) => {
 
   return (
     <aside className="border-gray-100 border-4 absolute ml-3 p-3 rounded-md cursor-default">
-      <CustomCloseButton onClose={(e) => handleClick(e, -1)} />
+      <CloseButton onClose={(e) => handleClick(e, -1)} />
       <ul>
         <li className="flex">
           <span className="w-20 font-bold">탑승자</span>

@@ -30,7 +30,7 @@ type AirlineType = {
   name: string;
   slogan: string;
   website: string;
-  _id: string;
+  _id?: string;
 };
 
 type PassengerType = {

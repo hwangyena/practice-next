@@ -1,11 +1,14 @@
-interface IApiRes {
-  data: {
-    totalPages: number;
-    totalPasseners: number;
-    data: PassengerType[];
-  };
+interface IPassengerData {
+  totalPages: number;
+  totalPasseners: number;
+  data: PassengerType[];
+}
+
+interface IApiRes<T> {
+  data: T;
   status: number;
   statusText: string;
+  isValidating?: boolean; // loading
 }
 
 interface IApiParams {

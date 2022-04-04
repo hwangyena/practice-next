@@ -1,18 +1,30 @@
-import axios from 'axios';
-import useSWR, { useSWRConfig } from 'swr';
-import { fetchAxios, getPassenger, METHOD } from '.';
+import useSWR from 'swr';
+import { swrFetch } from '.';
+import { fetch, METHOD } from './api-utils';
 
-export const usePassenger = ({ current = 0, size = 5 }: { current: number; size: number }) => {
-  // const res = useSWR<{id: string; pw: string}>(userId ? `/v2/users/${userId}` : null , getFetch)
-  const params = {
-    page: current,
-    size: size,
-  };
-  const res = useSWR<IApiRes | undefined>(['/v1/passenger', params], (url: string) => getPassenger(url, params));
+const PassengerApiList = {
+  usePassenger: ({ current = 0, size = 5 }: { current: number; size: number }) => {
+    const params = {
+      page: current,
+      size: size,
+    };
+    const res = useSWR<IApiRes<IPassengerData> | undefined>(['/v1/passenger', params], (url: string) =>
+      swrFetch(url, params)
+    );
 
-  return res;
+    return res;
+  },
+  useAirline: () => {
+    const res = useSWR<IApiRes<AirlineType[]> | undefined>('/v1/airlines', (url: string) => swrFetch(url));
+    return res;
+  },
+  createPassenger: (name: string, trips: number, airline: number) => {
+    return fetch<IApiRes<IPassengerData> | undefined>('/v1/passenger', METHOD.POST, {
+      name: name,
+      trips: trips,
+      airline: airline,
+    });
+  },
 };
 
-export const useLogin = () => {
-  return useSWRConfig();
-};
+export default PassengerApiList;

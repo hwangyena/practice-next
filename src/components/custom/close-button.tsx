@@ -5,7 +5,7 @@ type Props = {
   onClose: MouseEventHandler;
 };
 
-const CustomCloseButton = ({ onClose }: Props) => {
+const CloseButton = ({ onClose }: Props) => {
   return (
     <div className={styles['close-button']} onClick={onClose}>
       <span />
@@ -14,4 +14,4 @@ const CustomCloseButton = ({ onClose }: Props) => {
   );
 };
 
-export default memo(CustomCloseButton);
+export default memo(CloseButton);
