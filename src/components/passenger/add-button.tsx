@@ -14,9 +14,9 @@ const PassengerAddButton = () => {
   const [trips, setTrips] = useState('');
   const [airline, setAirline] = useState('');
 
-  const res = PassengerApiList.useAirline();
+  const { data, error } = PassengerApiList.useAirline();
 
-  const airlines = useMemo(() => res.data?.data.slice(0, 10), [res]);
+  const airlines = useMemo(() => data?.data.slice(0, 10), [data]);
   // const airlines = res.data?.data;
 
   const onCancel = () => {
@@ -75,7 +75,9 @@ const PassengerAddButton = () => {
               placeholder="only numbers"
             />
           </label>
-          {res.data === undefined ? (
+          {error ? (
+            <>Error!</>
+          ) : data === undefined ? (
             <Loading />
           ) : (
             <div className="">
