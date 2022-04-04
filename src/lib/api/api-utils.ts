@@ -3,6 +3,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 export enum METHOD {
   GET = 'get',
   POST = 'post',
+  DELETE = 'delete',
 }
 /** axios 데이터 연동(GET, POST) */
 export const fetch = async <T>(

@@ -10,14 +10,18 @@ export default function UserPage() {
 
   const total = useRef(0);
 
-  const res = PassengerApiList.usePassenger({ current: current - 1, size: PAGE_LIST_PER_ONCE });
+  const { data, error } = PassengerApiList.usePassenger({ current: current - 1, size: PAGE_LIST_PER_ONCE });
 
   useEffect(() => {
-    if (res.data) {
-      setPassengers(res.data.data.data);
-      total.current = res.data.data.totalPages;
+    if (data) {
+      if (error) {
+        const error = new Error('error!');
+        throw error;
+      }
+      setPassengers(data.data.data);
+      total.current = data.data.totalPages;
     }
-  }, [res]);
+  }, [data]);
 
   const onPageChange = (page: number) => {
     setCurrent(page);

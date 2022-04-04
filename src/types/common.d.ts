@@ -34,7 +34,7 @@ type AirlineType = {
 };
 
 type PassengerType = {
-  id: string;
+  _id: string;
   airline: AirlineType[];
   name: string;
   trips: number;

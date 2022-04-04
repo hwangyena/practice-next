@@ -25,6 +25,9 @@ const PassengerApiList = {
       airline: airline,
     });
   },
+  deletePassenger: (id: string) => {
+    return fetch<string>(`/v1/passenger/${id}`, METHOD.DELETE);
+  },
 };
 
 export default PassengerApiList;

@@ -1,6 +1,8 @@
 import { MouseEvent } from 'react';
 import dynamic from 'next/dynamic';
 import { UserStore } from '../../store';
+import Trash from 'public/images/trash.svg';
+import PassengerApiList from 'src/lib/api/passenger';
 
 const PassengerDetailPopup = dynamic(() => import('./detail-popup'));
 
@@ -17,6 +19,12 @@ const PassengerTable = ({ passengers }: Props) => {
     setSelectUser(index);
   };
 
+  const onDelete = async (e: MouseEvent<HTMLTableDataCellElement>, id: string) => {
+    e.stopPropagation();
+    const res = await PassengerApiList.deletePassenger(id);
+    alert(res.statusText);
+  };
+
   return (
     <table style={{ borderSpacing: '0 15px', borderCollapse: 'separate' }} className="min-w-[400px]">
       {/* <table style={{ borderSpacing: '0 15px', borderCollapse: 'separate' }} className="grid place-items-center"> */}
@@ -30,11 +38,16 @@ const PassengerTable = ({ passengers }: Props) => {
       <tbody>
         {passengers ? (
           passengers.map((v, i) => (
-            <tr key={i} className="cursor-pointer" onClick={(e) => handleClick(e, i)}>
-              <td className="bg-gray-200 p-3">{v.name}</td>
-              <td className="bg-gray-200 p-3">{v.airline[0].country}</td>
-              <td className="bg-gray-200 p-3 mt-3">{v.airline[0].name}</td>
-              {i === selectUser && <PassengerDetailPopup passenger={v} handleClick={handleClick} />}
+            <tr key={i} className="cursor-pointer bg-gray-200" onClick={(e) => handleClick(e, i)}>
+              <td className="p-3">{v.name}</td>
+              <td className="p-3">{v.airline[0].country}</td>
+              <td className="p-3 mt-3">{v.airline[0].name}</td>
+              <td className="p-3" onClick={(e) => onDelete(e, v._id)}>
+                <Trash className="h-6 w-6 text-slate-400 hover:text-slate-700" />
+              </td>
+              <td className="absolute">
+                {i === selectUser && <PassengerDetailPopup passenger={v} handleClick={handleClick} />}
+              </td>
             </tr>
           ))
         ) : (
