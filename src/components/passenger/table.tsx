@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react';
 import dynamic from 'next/dynamic';
-import { UserStore } from '../../store';
+import { PassengerStore } from '../../store';
 import Trash from 'public/images/trash.svg';
 import PassengerApiList from 'src/lib/api/passenger';
 
@@ -12,11 +12,11 @@ type Props = {
 
 /** 승객 정보 테이블 */
 const PassengerTable = ({ passengers }: Props) => {
-  const { selectUser, setSelectUser } = UserStore.useContainer();
+  const { selectPassenger, setSelectPassenger } = PassengerStore.useContainer();
 
   const handleClick = (e: MouseEvent<Element>, index: number) => {
     e.stopPropagation();
-    setSelectUser(index);
+    setSelectPassenger(index);
   };
 
   const onDelete = async (e: MouseEvent<HTMLTableDataCellElement>, id: string) => {
@@ -46,7 +46,7 @@ const PassengerTable = ({ passengers }: Props) => {
                 <Trash className="h-6 w-6 text-slate-400 hover:text-slate-700" />
               </td>
               <td className="absolute">
-                {i === selectUser && <PassengerDetailPopup passenger={v} handleClick={handleClick} />}
+                {i === selectPassenger && <PassengerDetailPopup passenger={v} handleClick={handleClick} />}
               </td>
             </tr>
           ))

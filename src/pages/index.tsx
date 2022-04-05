@@ -11,8 +11,6 @@ interface IProfileUpdateAction {
 }
 
 const profileReducer = (state: UserType, action: IProfileUpdateAction) => {
-  console.log('action', action.value);
-
   switch (action.type) {
     case 'UPDATE':
       return {

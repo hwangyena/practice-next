@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { createContainer } from 'unstated-next';
 
 const useUser = () => {
-  const [selectUser, setSelectUser] = useState(-1);
+  const [name, setName] = useState('');
+  const [hobbyTag, setHobbyTag] = useState([]);
 
   return {
-    selectUser,
-    setSelectUser,
+    name,
+    hobbyTag,
   };
 };
 

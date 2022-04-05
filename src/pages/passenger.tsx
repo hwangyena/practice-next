@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Pagination, { PAGE_LIST_PER_ONCE } from 'src/components/custom/pagination';
 import { PassengerAddButton, PassengerTable } from 'src/components/passenger';
 import PassengerApiList from 'src/lib/api/passenger';
-import { UserStore } from 'src/store';
+import { PassengerStore } from 'src/store';
 
 export default function UserPage() {
   const [passengers, setPassengers] = useState<PassengerType[]>([]);
@@ -37,9 +37,9 @@ export default function UserPage() {
         <section className="w-[50%] flex justify-end">
           <PassengerAddButton />
         </section>
-        <UserStore.Provider>
+        <PassengerStore.Provider>
           <PassengerTable {...{ passengers }} />
-        </UserStore.Provider>
+        </PassengerStore.Provider>
         <Pagination currentPage={current} total={total.current} onPageChange={onPageChange} />
       </main>
     </>
