@@ -5,4 +5,8 @@ export const dummyUser = {
   height: 160,
   location: 'ulsan',
   hobby: [],
+  description: `
+  Hello, my name is user1.
+  I'm a programmer.
+  `,
 };

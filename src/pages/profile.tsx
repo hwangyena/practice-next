@@ -1,11 +1,16 @@
-import { useEffect, useState } from 'react';
-import { DropDown, SearchDropDown } from 'src/components/custom';
+import dynamic from 'next/dynamic';
+import { MouseEvent, useEffect, useState } from 'react';
+import { ProfileSearchDropDown } from 'src/components/profile';
 import { dummyHobby, dummyUser } from 'src/lib/dummy';
-import { UserStore } from 'src/store';
+import { GlobalStore, UserStore } from 'src/store';
+
+const ProfileContextMenu = dynamic(() => import('src/components/profile/context-menu'));
 
 export default function Profile() {
-  const [hobbies, setHobbies] = useState<string[]>([]);
+  const { masking, handleMasking } = GlobalStore.useContainer();
   const user = Object.keys(dummyUser).map((v) => ({ label: v, value: dummyUser[v as keyof typeof dummyUser] }));
+
+  const [hobbies, setHobbies] = useState<string[]>([]);
 
   const onAddTag = (tag: string) => {
     setHobbies((p) => [tag, ...p]);
@@ -15,8 +20,26 @@ export default function Profile() {
     setHobbies((p) => p.filter((v) => tag !== v));
   };
 
+  const onMasking = (e: MouseEvent<HTMLTableDataCellElement, globalThis.MouseEvent>) => {
+    e.preventDefault();
+    const maskingText = window.getSelection()?.toString();
+    if (!maskingText) return;
+    handleMasking(true, e.pageX, e.pageY, maskingText);
+  };
+
+  useEffect(() => {
+    const removeMasking = () => {
+      handleMasking(false);
+    };
+
+    document.addEventListener('click', removeMasking);
+    return () => {
+      document.removeEventListener('click', removeMasking);
+    };
+  });
+
   return (
-    <UserStore.Provider>
+    <>
       <div className="p-5">
         <h3 className="mb-3">user profile</h3>
         <table>
@@ -24,7 +47,7 @@ export default function Profile() {
             {user.map((v) => (
               <tr key={v.label}>
                 <th className="p-3 bg-slate-100 border-2">{v.label}</th>
-                <td className="p-3 border-2">
+                <td className="p-3 border-2 whitespace-pre" onContextMenu={onMasking}>
                   {v.label === 'hobby' ? (
                     <div className="flex flex-col gap-2">
                       <div className="flex gap-1">
@@ -42,7 +65,10 @@ export default function Profile() {
                           ))
                         )}
                       </div>
-                      <SearchDropDown options={dummyHobby.filter((v) => !hobbies.includes(v))} {...{ onAddTag }} />
+                      <ProfileSearchDropDown
+                        options={dummyHobby.filter((v) => !hobbies.includes(v))}
+                        {...{ onAddTag }}
+                      />
                     </div>
                   ) : (
                     v.value
@@ -53,6 +79,7 @@ export default function Profile() {
           </tbody>
         </table>
       </div>
-    </UserStore.Provider>
+      {masking.show && <ProfileContextMenu top={masking.ypos} left={masking.xpos} text={masking.text} />}
+    </>
   );
 }

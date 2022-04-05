@@ -6,13 +6,11 @@ type Props = {
   onAddTag: (v: string) => void;
 };
 
-const SearchDropDown = ({ options, onAddTag }: Props) => {
+const ProfileSearchDropDown = ({ options, onAddTag }: Props) => {
   const [search, setSearch] = useState('');
   const [focus, setFocus] = useState(false);
 
   const onSetSearch = (e: MouseEvent<HTMLLIElement, globalThis.MouseEvent>, value: string) => {
-    console.log('set');
-
     setSearch(value);
   };
 
@@ -60,4 +58,4 @@ const SearchDropDown = ({ options, onAddTag }: Props) => {
   );
 };
 
-export default SearchDropDown;
+export default ProfileSearchDropDown;
