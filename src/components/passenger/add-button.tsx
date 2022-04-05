@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import Add from 'public/images/add.svg';
 import dynamic from 'next/dynamic';
 import { Loading } from '../custom';
@@ -56,7 +56,7 @@ const PassengerAddButton = () => {
   }, [visible]);
 
   return (
-    <>
+    <Suspense fallback={<Loading />}>
       <div className="cursor-pointer mt-3" onClick={() => setVisible(true)}>
         <Add className="h-7 w-7 text-slate-300 hover:text-slate-500" alt="user-add" />
       </div>
@@ -124,7 +124,7 @@ const PassengerAddButton = () => {
           </button>
         </footer>
       </PopUp>
-    </>
+    </Suspense>
   );
 };
 

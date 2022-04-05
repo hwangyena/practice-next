@@ -4,3 +4,4 @@ export { default as Pagination } from './pagination';
 export { default as Loading } from './loading';
 export { default as PopUp } from './pop-up';
 export { default as DropDown } from './drop-down';
+export { default as SearchDropDown } from './search-drop-down';

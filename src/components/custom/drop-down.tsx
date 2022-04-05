@@ -8,11 +8,9 @@ type Props = {
 };
 
 const DropDown = ({ options, value, placeholder, onSelect }: Props) => {
-  const [focus, setFocus] = useState(false);
+  const [focus, setFocus] = useState(true);
 
   const onSelectItem = (v: string) => {
-    console.log('selectItem -> ', v);
-
     if (v === value) {
       setFocus(false);
       return;

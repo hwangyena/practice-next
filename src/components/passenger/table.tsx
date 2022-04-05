@@ -1,8 +1,9 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { PassengerStore } from '../../store';
 import Trash from 'public/images/trash.svg';
 import PassengerApiList from 'src/lib/api/passenger';
+import { Loading } from '../custom';
 
 const PassengerDetailPopup = dynamic(() => import('./detail-popup'));
 
@@ -26,37 +27,39 @@ const PassengerTable = ({ passengers }: Props) => {
   };
 
   return (
-    <table style={{ borderSpacing: '0 15px', borderCollapse: 'separate' }} className="min-w-[400px]">
-      {/* <table style={{ borderSpacing: '0 15px', borderCollapse: 'separate' }} className="grid place-items-center"> */}
-      <thead>
-        <tr>
-          <th className="p-3">탑승자</th>
-          <th className="p-3">도착지</th>
-          <th className="p-3">비행기명</th>
-        </tr>
-      </thead>
-      <tbody>
-        {passengers ? (
-          passengers.map((v, i) => (
-            <tr key={i} className="cursor-pointer bg-gray-200" onClick={(e) => handleClick(e, i)}>
-              <td className="p-3">{v.name}</td>
-              <td className="p-3">{v.airline[0].country}</td>
-              <td className="p-3 mt-3">{v.airline[0].name}</td>
-              <td className="p-3" onClick={(e) => onDelete(e, v._id)}>
-                <Trash className="h-6 w-6 text-slate-400 hover:text-slate-700" />
-              </td>
-              <td className="absolute">
-                {i === selectPassenger && <PassengerDetailPopup passenger={v} handleClick={handleClick} />}
-              </td>
-            </tr>
-          ))
-        ) : (
+    <Suspense fallback={<Loading />}>
+      <table style={{ borderSpacing: '0 15px', borderCollapse: 'separate' }} className="min-w-[400px]">
+        {/* <table style={{ borderSpacing: '0 15px', borderCollapse: 'separate' }} className="grid place-items-center"> */}
+        <thead>
           <tr>
-            <td>사용자가 없습니다.</td>
+            <th className="p-3">탑승자</th>
+            <th className="p-3">도착지</th>
+            <th className="p-3">비행기명</th>
           </tr>
-        )}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {passengers ? (
+            passengers.map((v, i) => (
+              <tr key={i} className="cursor-pointer bg-gray-200" onClick={(e) => handleClick(e, i)}>
+                <td className="p-3">{v.name}</td>
+                <td className="p-3">{v.airline[0].country}</td>
+                <td className="p-3 mt-3">{v.airline[0].name}</td>
+                <td className="p-3" onClick={(e) => onDelete(e, v._id)}>
+                  <Trash className="h-6 w-6 text-slate-400 hover:text-slate-700" />
+                </td>
+                <td className="absolute">
+                  {i === selectPassenger && <PassengerDetailPopup passenger={v} handleClick={handleClick} />}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td>사용자가 없습니다.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </Suspense>
   );
 };
 
