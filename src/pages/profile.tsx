@@ -10,7 +10,9 @@ export default function Profile() {
 
   useEffect(() => {
     const removeMasking = () => {
-      handleMasking(false);
+      console.log('masking~~');
+
+      handleMasking({ ...masking, show: false });
     };
 
     document.addEventListener('click', removeMasking);
@@ -25,7 +27,7 @@ export default function Profile() {
         <h3 className="mb-3">user profile</h3>
         <ProfileTable />
       </div>
-      {masking.show && <ProfileContextMenu top={masking.ypos} left={masking.xpos} text={masking.text} />}
+      {masking.show && <ProfileContextMenu {...{ masking }} />}
     </ProfileStore.Provider>
   );
 }

@@ -15,3 +15,12 @@ interface IApiParams {
   page: number;
   size: number;
 }
+
+type MaskingType = {
+  show: boolean;
+  xpos: number;
+  ypos: number;
+  maskingText: string;
+  maskingStart: number;
+  maskingEnd: number;
+};
