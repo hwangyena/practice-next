@@ -39,3 +39,11 @@ type PassengerType = {
   name: string;
   trips: number;
 };
+
+type ProfileType = {
+  name: string;
+  height: number;
+  location: string;
+  hobby: string[];
+  description: string;
+};
