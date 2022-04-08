@@ -1,7 +1,11 @@
 type RequestForm = {
-  method: 'GET' | 'POST';
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   path: string;
   params?: Record<string, unknown> | FormData;
+  config?: {
+    timeout?: number;
+    headers?: Record<string, string>;
+  };
 };
 
 type FetchErrorType = {
@@ -38,4 +42,19 @@ type PassengerType = {
   airline: AirlineType[];
   name: string;
   trips: number;
+};
+
+type ProfileType = {
+  name: string;
+  height: number;
+  location: string;
+  hobby: string[];
+  description: string;
+};
+
+type FetchError = {
+  status: number;
+  statusText: string;
+  code: string;
+  isFetchError: boolean;
 };

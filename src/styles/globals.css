@@ -53,3 +53,7 @@ button {
 input {
   border: 1px solid #000;
 }
+
+.masking {
+  color: blue;
+}

@@ -1,26 +1,35 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { createContainer } from 'unstated-next';
 
 const useGlobal = () => {
-  const [visible, setIsVisible] = useState(false);
-  const [masking, setMasking] = useState<{ xpos: number; ypos: number; show: boolean; text: string }>({
+  const [visible, setVisible] = useState(false);
+  const [masking, setMasking] = useState<MaskingType>({
     xpos: 0,
     ypos: 0,
     show: false,
-    text: '',
+    maskingText: '',
+    maskingStart: 0,
+    maskingEnd: 0,
   });
 
-  const toogleVisible = () => {
-    setIsVisible((p) => !p);
+  const moveUrl = useRef('');
+
+  const toogleVisible = (value?: boolean) => {
+    setVisible((p) => value ?? !p);
+  };
+  const onCancel = () => {
+    setVisible(false);
   };
 
-  const handleMasking = (show: boolean, x?: number, y?: number, text?: string) => {
-    setMasking({ xpos: x ?? 0, ypos: y ?? 0, show, text: text ?? '' });
+  const handleMasking = ({ maskingEnd, maskingStart, maskingText, show, xpos, ypos }: MaskingType) => {
+    setMasking({ xpos, ypos, show, maskingText, maskingStart, maskingEnd });
   };
 
   return {
     visible,
     masking,
+    moveUrl,
+    onCancel,
     toogleVisible,
     handleMasking,
   };
