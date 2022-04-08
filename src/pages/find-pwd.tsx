@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { BackButton } from 'src/components/custom';
 import { EMAIL_REX } from 'src/lib/regex';
 
 const PopUp = dynamic(() => import('src/components/custom/pop-up'));
@@ -29,6 +30,7 @@ export default function FindPwd() {
 
   return (
     <>
+      <BackButton />
       <main className="grid place-items-center flex-col h-screen">
         <div className="w-[400px]">
           <h2 className="mb-3 text-center">비밀번호 찾기</h2>

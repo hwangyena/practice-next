@@ -1,1 +1,1 @@
-export { default as UseBeforeUnload } from './use-before-unload';
+export { default as UsePageLoad } from './use-page-load';
