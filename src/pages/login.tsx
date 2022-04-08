@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUser } from 'src/lib/endpoints/employees';
+import { UseBeforeUnload } from 'src/lib/hooks';
 import { EMAIL_REX } from 'src/lib/regex';
 
 export default function Login() {
@@ -12,7 +13,9 @@ export default function Login() {
   const validLogin = loginId && password;
 
   const { login } = useUser();
+  UseBeforeUnload();
 
+  /** login */
   const onLogin = async () => {
     if (!loginId && !password) {
       return;
@@ -31,6 +34,18 @@ export default function Login() {
     }
     setError((p) => ({ ...p, error: false }));
   };
+
+  /** USEEFFECT */
+  // useEffect(() => {
+  //   const handleUnload = (e: BeforeUnloadEvent) => {
+  //     e.preventDefault();
+  //     e.returnValue = ''; //이거하면 크롬창이 나오니?
+  //     console.log('hh');
+  //   };
+
+  //   window.addEventListener('beforeunload', handleUnload);
+  //   return () => window.removeEventListener('beforeunload', handleUnload);
+  // }, []);
 
   return (
     <main className="grid place-items-center flex-col h-screen">
