@@ -1,24 +1,34 @@
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
+import { useUser } from 'src/lib/endpoints/employees';
 import { EMAIL_REX } from 'src/lib/regex';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [pwd, setPwd] = useState('');
+  const [loginId, setLoginId] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState<{ message: string; error: boolean }>({ message: '', error: false });
 
   const router = useRouter();
-  const validLogin = email && pwd;
+  const validLogin = loginId && password;
 
-  const onLogin = () => {
-    if (!email && !pwd) {
+  const { login } = useUser();
+
+  const onLogin = async () => {
+    if (!loginId && !password) {
       return;
     }
-    if (!EMAIL_REX.test(email)) {
+    if (!EMAIL_REX.test(loginId)) {
       setError({ message: '이메일 형식이 맞지않습니다.', error: true });
       return;
     }
 
+    const res = await login(loginId, password);
+
+    if (!res) {
+      // 10회이상 잘못 입력했는지 확인 필요
+      setError({ message: '아이디 또는 비밀번호를 잘못 입력하셨습니다.', error: true });
+      return;
+    }
     setError((p) => ({ ...p, error: false }));
   };
 
@@ -32,16 +42,16 @@ export default function Login() {
               className="p-2 w-full border-0 border-b border-slate-200 focus:outline-0"
               placeholder="이메일을 입력해주세요."
               autoComplete="off"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={loginId}
+              onChange={(e) => setLoginId(e.target.value)}
             />
             <input
               className="p-2 w-full border-0  focus:outline-0"
               placeholder="비밀번호를 입력해주세요."
               type="password"
               autoComplete="off"
-              value={pwd}
-              onChange={(e) => setPwd(e.target.value)}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           {error.error && <span className="text-red-500">{error.message}</span>}

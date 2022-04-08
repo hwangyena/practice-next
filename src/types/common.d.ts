@@ -1,7 +1,11 @@
 type RequestForm = {
-  method: 'GET' | 'POST';
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   path: string;
   params?: Record<string, unknown> | FormData;
+  config?: {
+    timeout?: number;
+    headers?: Record<string, string>;
+  };
 };
 
 type FetchErrorType = {
@@ -46,4 +50,11 @@ type ProfileType = {
   location: string;
   hobby: string[];
   description: string;
+};
+
+type FetchError = {
+  status: number;
+  statusText: string;
+  code: string;
+  isFetchError: boolean;
 };
