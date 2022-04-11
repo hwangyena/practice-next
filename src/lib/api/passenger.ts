@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { swrFetch } from '.';
+import { getFetch } from '.';
 import { fetch, METHOD } from './api-utils';
 
 const PassengerApiList = {
@@ -9,20 +9,20 @@ const PassengerApiList = {
       size: size,
     };
     const res = useSWR<IApiRes<IPassengerData> | undefined>(['/v1/passenger', params], (url: string) =>
-      swrFetch(url, params)
+      getFetch(url, params)
     );
 
     return res;
   },
   useAirline: () => {
-    const res = useSWR<IApiRes<AirlineType[]> | undefined>('/v1/airlines', (url: string) => swrFetch(url));
+    const res = useSWR<IApiRes<AirlineType[]> | undefined>('/v1/airlines', (url: string) => getFetch(url));
     return res;
   },
   createPassenger: (name: string, trips: number, airline: number) => {
     return fetch<IApiRes<IPassengerData> | undefined>('/v1/passenger', METHOD.POST, {
-      name: name,
-      trips: trips,
-      airline: airline,
+      name,
+      trips,
+      airline,
     });
   },
   deletePassenger: (id: string) => {

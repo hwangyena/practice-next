@@ -1,13 +1,20 @@
-import React, { Suspense, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Add from 'public/images/add.svg';
 import dynamic from 'next/dynamic';
 import { Loading } from '../custom';
 import PassengerApiList from 'src/lib/api/passenger';
+import { useSWRConfig } from 'swr';
+import { useMutation, useQueryClient } from 'react-query';
 
 const PopUp = dynamic(() => import('../custom/pop-up'));
 
+interface Props {
+  isQuery?: boolean;
+}
+
 /** 승객 추가 버튼 및 모달 */
-const PassengerAddButton = () => {
+const PassengerAddButton = ({ isQuery = false }: Props) => {
+  const { mutate } = useSWRConfig();
   const [visible, setVisible] = useState(false);
 
   const [name, setName] = useState('');
@@ -15,9 +22,24 @@ const PassengerAddButton = () => {
   const [airline, setAirline] = useState('');
 
   const { data, error } = PassengerApiList.useAirline();
+  // react-query
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    ({ airline, name, trips }: { name: string; trips: number; airline: number }) =>
+      PassengerApiList.createPassenger(name, trips, airline),
+    {
+      onSuccess: () => {
+        alert('[React-query] 새로운 승객을 등록했습니다.');
+        queryClient.invalidateQueries('passenger'); //invalidate & refetch
+        onCancel();
+      },
+      onError: (e) => {
+        alert('[Error] ' + e);
+      },
+    }
+  );
 
   const airlines = useMemo(() => data?.data.slice(0, 10), [data]);
-  // const airlines = res.data?.data;
 
   const onCancel = () => {
     setVisible(false);
@@ -37,13 +59,22 @@ const PassengerAddButton = () => {
       return;
     }
 
-    const res = await PassengerApiList.createPassenger(name, Number(trips), Number(airline));
-
-    onCancel();
-    if (res.status === 200) {
-      alert(`새로운 승객을 등록했습니다.`);
+    if (isQuery) {
+      mutation.mutate({ name, trips: Number(trips), airline: Number(airline) });
     } else {
-      alert(`[Error] ${res.statusText}`);
+      // 1.로컬 데이터 업데이트, 갱신 비활성화
+      mutate('/v1/passenger', { name, trips: Number(trips), airline: Number(airline) }, false);
+      // 2. POST 요청 전송
+      const res = await PassengerApiList.createPassenger(name, Number(trips), Number(airline));
+      // 3. 데이터 갱신
+      mutate('/v1/passenger');
+
+      onCancel();
+      if (res.status === 200) {
+        alert(`새로운 승객을 등록했습니다.`);
+      } else {
+        alert(`[Error] ${res.statusText}`);
+      }
     }
   };
 
@@ -56,7 +87,7 @@ const PassengerAddButton = () => {
   }, [visible]);
 
   return (
-    <Suspense fallback={<Loading />}>
+    <>
       <div className="cursor-pointer mt-3" onClick={() => setVisible(true)}>
         <Add className="h-7 w-7 text-slate-300 hover:text-slate-500" alt="user-add" />
       </div>
@@ -124,7 +155,7 @@ const PassengerAddButton = () => {
           </button>
         </footer>
       </PopUp>
-    </Suspense>
+    </>
   );
 };
 
