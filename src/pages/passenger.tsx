@@ -30,7 +30,7 @@ export default function UserPage() {
   return (
     <>
       <header className="grid place-items-center mt-5">
-        <h2>✈️ Page /passenger ✈</h2>
+        <h2>✈️ Page /passenger - SWR ✈</h2>
       </header>
       <main className="grid place-items-center mt-3 p-2">
         <h3>사용자 목록</h3>
