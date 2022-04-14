@@ -1,4 +1,10 @@
-type UserInfo = {
+interface AxiosResponseType {
+  accessToken: string;
+  refreshToken: string;
+  tokenType: string;
+}
+
+interface UserInfo extends AxiosResponseType {
   id: number;
   loginId: string;
   name: string;
@@ -6,4 +12,4 @@ type UserInfo = {
   role: string;
   svcId: string;
   jobInfoIds: { domainNo: string; channelId: string; svcId: string }[];
-};
+}

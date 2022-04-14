@@ -5,24 +5,15 @@ export const useUser = () => {
   const { data: userInfo, mutate } = useSWR(SWR_KEY.userInfo);
 
   const login = async (loginId: string, password: string, force = false) => {
-    const res = await sendRequest<{
-      id: number;
-      loginId: string;
-      name: string;
-      phone: string;
-      role: string;
-      svcId: string;
-      jobInfoIds: { domainNo: string; channelId: string; svcId: string }[];
-    }>({
+    const res = await sendRequest<UserInfo>({
       method: 'POST',
       path: '/employees/sign-in',
       params: { loginId, password, force },
     });
 
-    // await sendRequest({method: 'POST',path: '/employees/sign-in', params: {loginId, password, force}})
-
     if (res.data) {
       mutate(); // 데이터 갱신
+      window.sessionStorage.setItem('accessToken', res.data.accessToken);
     }
 
     return res;

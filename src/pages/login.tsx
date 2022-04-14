@@ -35,13 +35,14 @@ export default function Login() {
     // }
 
     const res = await login(loginId, password);
-    console.log('res', res);
 
     if (res.error) {
       setError({ message: res.error.data.message, error: true });
       return;
     }
+    //로그인 성공
     setError((p) => ({ ...p, error: false }));
+    router.push('/dashboard');
   };
 
   useEffect(() => {
@@ -49,18 +50,6 @@ export default function Login() {
       showModal.current = true;
     }
   }, [loginId, password]);
-
-  /** USEEFFECT */
-  // useEffect(() => {
-  //   const handleUnload = (e: BeforeUnloadEvent) => {
-  //     e.preventDefault();
-  //     e.returnValue = ''; //이거하면 크롬창이 나오니?
-  //     console.log('hh');
-  //   };
-
-  //   window.addEventListener('beforeunload', handleUnload);
-  //   return () => window.removeEventListener('beforeunload', handleUnload);
-  // }, []);
 
   return (
     <>
