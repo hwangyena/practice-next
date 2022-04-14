@@ -29,16 +29,16 @@ export default function Login() {
     if (!loginId && !password) {
       return;
     }
-    if (!EMAIL_REX.test(loginId)) {
-      setError({ message: '이메일 형식이 맞지않습니다.', error: true });
-      return;
-    }
+    // if (!EMAIL_REX.test(loginId)) {
+    //   setError({ message: '이메일 형식이 맞지않습니다.', error: true });
+    //   return;
+    // }
 
     const res = await login(loginId, password);
+    console.log('res', res);
 
-    if (!res) {
-      // 10회이상 잘못 입력했는지 확인 필요
-      setError({ message: '아이디 또는 비밀번호를 잘못 입력하셨습니다.', error: true });
+    if (res.error) {
+      setError({ message: res.error.data.message, error: true });
       return;
     }
     setError((p) => ({ ...p, error: false }));
@@ -46,8 +46,6 @@ export default function Login() {
 
   useEffect(() => {
     if (loginId || password) {
-      console.log('?');
-
       showModal.current = true;
     }
   }, [loginId, password]);

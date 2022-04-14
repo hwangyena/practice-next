@@ -5,7 +5,7 @@ export const useUser = () => {
   const { data: userInfo, mutate } = useSWR(SWR_KEY.userInfo);
 
   const login = async (loginId: string, password: string, force = false) => {
-    const { data } = await sendRequest<{
+    const res = await sendRequest<{
       id: number;
       loginId: string;
       name: string;
@@ -19,23 +19,25 @@ export const useUser = () => {
       params: { loginId, password, force },
     });
 
-    if (data) {
-      mutate(); //??
+    // await sendRequest({method: 'POST',path: '/employees/sign-in', params: {loginId, password, force}})
+
+    if (res.data) {
+      mutate(); // 데이터 갱신
     }
 
-    return data;
+    return res;
   };
 
-  const logout = async () => {
-    const { data } = await sendRequest<>({ method: 'POST', path: '/', params: {} });
-    return data;
-  };
+  // const logout = async () => {
+  //   const { data } = await sendRequest<>({ method: 'POST', path: '/', params: {} });
+  //   return data;
+  // };
 
-  const findPwd = async (loginId: string) => {
-    const { data } = await sendRequest<>({ method: 'POST', path: '/', params: {} });
+  // const findPwd = async (loginId: string) => {
+  //   const { data } = await sendRequest<>({ method: 'POST', path: '/', params: {} });
 
-    return data;
-  };
+  //   return data;
+  // };
 
   return { userInfo, login };
 };

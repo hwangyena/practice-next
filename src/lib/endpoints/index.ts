@@ -3,7 +3,6 @@ import queryString from 'query-string';
 import { mutate } from 'swr';
 
 export const SWR_KEY = {
-  // sample
   popup: '/local/popup',
   userInfo: '/local/userinfo',
 };
@@ -15,28 +14,40 @@ const handleError = (err: FetchError | AxiosError | unknown): FetchError => {
   let errRes: FetchError = {
     status: -1,
     statusText: 'Something went wrong!',
-    code: 'Unknown',
+    data: { code: 'Unknown', message: 'Error message', timeStamp: new Date().toISOString() },
     isFetchError: true,
   };
 
   if (axios.isAxiosError(err)) {
-    const response = err.response;
-    errRes.status = response?.status || -1;
-    errRes.statusText = response?.statusText || 'No status text';
+    const response = (err as AxiosError<ErrorResponse>).response;
+    errRes = {
+      status: response?.status || -1,
+      statusText: response?.statusText || 'No Status text',
+      data: {
+        code: response?.data.code || 'Unknown',
+        message: response?.data.message || 'No Error mesage',
+        timeStamp: response?.data.timeStamp || new Date().toISOString(),
+      },
+      isFetchError: true,
+    };
   } else if ((err as FetchError).isFetchError) {
     errRes = err as FetchError;
   } else {
     return errRes;
   }
 
-  switch (errRes.code) {
-    // sample
+  switch (errRes.data.code) {
+    case 'SECURITY001':
+    case 'SECURITY002':
+      break;
     case 'code for unauthorized':
       mutate(SWR_KEY.userInfo, null, false);
       break;
     default:
-      alert(`status: ${errRes.status}\nstatusText: ${errRes.statusText}\ncode: ${errRes.code}`);
+      alert(`status: ${errRes.status}\nstatusText: ${errRes.statusText}\ncode: ${errRes.data.code}`);
   }
+
+  console.log('errorRes', errRes);
 
   return errRes;
 };
@@ -54,11 +65,13 @@ export const sendRequest = async <T>(request: RequestForm): Promise<{ data: T | 
       axiosConfig.paramsSerializer = (params: Record<string, unknown>) => {
         return queryString.stringify(params);
       };
-      if (request.method !== 'GET') {
-        axiosConfig.data = request.params;
-      }
+    }
+
+    if (request.method !== 'GET') {
+      axiosConfig.data = request.params;
     }
   }
+
   try {
     const res = await axios(axiosConfig);
 
@@ -66,16 +79,15 @@ export const sendRequest = async <T>(request: RequestForm): Promise<{ data: T | 
     if (Math.floor(res.status / 100) === 2) {
       return { data: res.data.data, error: null };
     } else {
+      const { data, status, statusText } = res;
       throw {
-        status: res.status,
-        statusText: res.statusText,
-        // TODO: code as each project's policy
-        code: res.data.code,
+        status,
+        statusText,
+        data,
         isFetchError: true,
       } as FetchError;
     }
   } catch (err) {
-    // throw err;
     const errRes = handleError(err);
     return { data: null, error: errRes };
   }
@@ -90,11 +102,12 @@ export const fetcher = async <T>(url: string): Promise<T> => {
     if (Math.floor(res.status / 100) === 2) {
       return res.data;
     } else {
+      const { status, statusText, data } = res;
       throw {
-        status: res.status,
-        statusText: res.statusText,
+        status,
+        statusText,
         // TODO: code as each project's policy
-        code: 'Unknown',
+        data,
         isFetchError: true,
       } as FetchError;
     }
