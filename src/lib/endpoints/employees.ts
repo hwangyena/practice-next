@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { sendRequest, SWR_KEY } from '.';
 
 export const useUser = () => {
-  const { data: userInfo, mutate } = useSWR(SWR_KEY.userInfo);
+  const { data: userInfo, mutate, error: userError } = useSWR(SWR_KEY.userInfo);
 
   const login = async (loginId: string, password: string, force = false) => {
     const res = await sendRequest<UserInfo>({

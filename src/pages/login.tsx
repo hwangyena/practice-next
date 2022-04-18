@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { BackButton } from 'src/components/custom';
 import { useUser } from 'src/lib/endpoints/employees';
 import { UsePageLoad } from 'src/lib/hooks';
-import { EMAIL_REX } from 'src/lib/regex';
 import { GlobalStore } from 'src/store';
 
 const PopUp = dynamic(() => import('src/components/custom/pop-up'));
