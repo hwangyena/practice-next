@@ -22,7 +22,6 @@ const PassengerAddButton = ({ isQuery = false }: Props) => {
   const [airline, setAirline] = useState('');
 
   const { data, error } = PassengerApiList.useAirline();
-  console.log('isQuery', isQuery);
 
   // react-query
   // const queryClient = useQueryClient();
@@ -65,18 +64,30 @@ const PassengerAddButton = ({ isQuery = false }: Props) => {
     //   mutation.mutate({ name, trips: Number(trips), airline: Number(airline) });
     // } else {
     // }
-    // 1.로컬 데이터 업데이트, 갱신 비활성화
-    mutate('/v1/passenger', { name, trips: Number(trips), airline: Number(airline) }, false);
-    // 2. POST 요청 전송
-    const res = await PassengerApiList.createPassenger(name, Number(trips), Number(airline));
-    // 3. 데이터 갱신
-    mutate('/v1/passenger');
 
-    onCancel();
-    if (res.status === 200) {
-      alert(`새로운 승객을 등록했습니다.`);
-    } else {
-      alert(`[Error] ${res.statusText}`);
+    // // 1.로컬 데이터 업데이트, 갱신 비활성화
+    // mutate('/v1/passenger', { name, trips: Number(trips), airline: Number(airline) }, false);
+    // // 2. POST 요청 전송
+    // const res = await PassengerApiList.createPassenger(name, Number(trips), Number(airline));
+    // // 3. 데이터 갱신
+    // mutate('/v1/passenger');
+
+    // onCancel();
+    // if (res.status === 200) {
+    //   alert(`새로운 승객을 등록했습니다.`);
+    // } else {
+    //   alert(`[Error] ${res.statusText}`);
+    // }
+    try {
+      const res = await mutate('/v1/passenger', PassengerApiList.createPassenger(name, Number(trips), Number(airline)));
+      onCancel();
+      if (res.status === 200) {
+        alert(`새로운 승객을 등록했습니다.`);
+      } else {
+        throw error;
+      }
+    } catch (error) {
+      alert('[ERROR] error concurrent!');
     }
   };
 
