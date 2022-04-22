@@ -3,12 +3,14 @@ import type { AppProps } from 'next/app';
 import { GlobalStore } from '../store';
 import { SWRConfig } from 'swr';
 import { getFetch } from 'src/lib/api';
+import { swrLogger } from 'src/lib/endpoints';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <GlobalStore.Provider>
       <SWRConfig
         value={{
+          use: [swrLogger],
           fetcher: getFetch,
           onErrorRetry: (error, key: string, config, revalidate, { retryCount }) => {
             // 10번까지만 재시도

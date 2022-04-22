@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import queryString from 'query-string';
-import { mutate } from 'swr';
+import { Middleware, mutate, SWRHook } from 'swr';
 
 export const SWR_KEY = {
   popup: '/local/popup',
@@ -9,6 +9,15 @@ export const SWR_KEY = {
 
 axios.defaults.baseURL = '/rest-api/';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
+
+/** SWR middleware */
+export const swrLogger: Middleware = (useSWRNext: SWRHook) => {
+  return (key, fetcher, config) => {
+    console.log('SWR Request:', key);
+
+    return useSWRNext(key, fetcher, config);
+  };
+};
 
 const handleError = (err: FetchError | AxiosError | unknown): FetchError => {
   let errRes: FetchError = {
