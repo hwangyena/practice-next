@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { BackButton } from 'src/components/custom';
 import { useUser } from 'src/lib/endpoints/employees';
 import { UsePageLoad } from 'src/lib/hooks';
-import { EMAIL_REX } from 'src/lib/regex';
 import { GlobalStore } from 'src/store';
 
 const PopUp = dynamic(() => import('src/components/custom/pop-up'));
@@ -29,40 +28,27 @@ export default function Login() {
     if (!loginId && !password) {
       return;
     }
-    if (!EMAIL_REX.test(loginId)) {
-      setError({ message: '이메일 형식이 맞지않습니다.', error: true });
-      return;
-    }
+    // if (!EMAIL_REX.test(loginId)) {
+    //   setError({ message: '이메일 형식이 맞지않습니다.', error: true });
+    //   return;
+    // }
 
     const res = await login(loginId, password);
 
-    if (!res) {
-      // 10회이상 잘못 입력했는지 확인 필요
-      setError({ message: '아이디 또는 비밀번호를 잘못 입력하셨습니다.', error: true });
+    if (res.error) {
+      setError({ message: res.error.data.message, error: true });
       return;
     }
+    //로그인 성공
     setError((p) => ({ ...p, error: false }));
+    router.push('/dashboard');
   };
 
   useEffect(() => {
     if (loginId || password) {
-      console.log('?');
-
       showModal.current = true;
     }
   }, [loginId, password]);
-
-  /** USEEFFECT */
-  // useEffect(() => {
-  //   const handleUnload = (e: BeforeUnloadEvent) => {
-  //     e.preventDefault();
-  //     e.returnValue = ''; //이거하면 크롬창이 나오니?
-  //     console.log('hh');
-  //   };
-
-  //   window.addEventListener('beforeunload', handleUnload);
-  //   return () => window.removeEventListener('beforeunload', handleUnload);
-  // }, []);
 
   return (
     <>

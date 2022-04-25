@@ -51,10 +51,3 @@ type ProfileType = {
   hobby: string[];
   description: string;
 };
-
-type FetchError = {
-  status: number;
-  statusText: string;
-  code: string;
-  isFetchError: boolean;
-};

@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { Loading } from '../custom';
 import PassengerApiList from 'src/lib/api/passenger';
 import { useSWRConfig } from 'swr';
-import { useMutation, useQueryClient } from 'react-query';
+// import { useMutation, useQueryClient } from 'react-query';
 
 const PopUp = dynamic(() => import('../custom/pop-up'));
 
@@ -22,22 +22,23 @@ const PassengerAddButton = ({ isQuery = false }: Props) => {
   const [airline, setAirline] = useState('');
 
   const { data, error } = PassengerApiList.useAirline();
+
   // react-query
-  const queryClient = useQueryClient();
-  const mutation = useMutation(
-    ({ airline, name, trips }: { name: string; trips: number; airline: number }) =>
-      PassengerApiList.createPassenger(name, trips, airline),
-    {
-      onSuccess: () => {
-        alert('[React-query] 새로운 승객을 등록했습니다.');
-        queryClient.invalidateQueries('passenger'); //invalidate & refetch
-        onCancel();
-      },
-      onError: (e) => {
-        alert('[Error] ' + e);
-      },
-    }
-  );
+  // const queryClient = useQueryClient();
+  // const mutation = useMutation(
+  //   ({ airline, name, trips }: { name: string; trips: number; airline: number }) =>
+  //     PassengerApiList.createPassenger(name, trips, airline),
+  //   {
+  //     onSuccess: () => {
+  //       alert('[React-query] 새로운 승객을 등록했습니다.');
+  //       queryClient.invalidateQueries('passenger'); //invalidate & refetch
+  //       onCancel();
+  //     },
+  //     onError: (e) => {
+  //       alert('[Error] ' + e);
+  //     },
+  //   }
+  // );
 
   const airlines = useMemo(() => data?.data.slice(0, 10), [data]);
 
@@ -59,22 +60,34 @@ const PassengerAddButton = ({ isQuery = false }: Props) => {
       return;
     }
 
-    if (isQuery) {
-      mutation.mutate({ name, trips: Number(trips), airline: Number(airline) });
-    } else {
-      // 1.로컬 데이터 업데이트, 갱신 비활성화
-      mutate('/v1/passenger', { name, trips: Number(trips), airline: Number(airline) }, false);
-      // 2. POST 요청 전송
-      const res = await PassengerApiList.createPassenger(name, Number(trips), Number(airline));
-      // 3. 데이터 갱신
-      mutate('/v1/passenger');
+    // if (isQuery) {
+    //   mutation.mutate({ name, trips: Number(trips), airline: Number(airline) });
+    // } else {
+    // }
 
+    // // 1.로컬 데이터 업데이트, 갱신 비활성화
+    // mutate('/v1/passenger', { name, trips: Number(trips), airline: Number(airline) }, false);
+    // // 2. POST 요청 전송
+    // const res = await PassengerApiList.createPassenger(name, Number(trips), Number(airline));
+    // // 3. 데이터 갱신
+    // mutate('/v1/passenger');
+
+    // onCancel();
+    // if (res.status === 200) {
+    //   alert(`새로운 승객을 등록했습니다.`);
+    // } else {
+    //   alert(`[Error] ${res.statusText}`);
+    // }
+    try {
+      const res = await mutate('/v1/passenger', PassengerApiList.createPassenger(name, Number(trips), Number(airline)));
       onCancel();
       if (res.status === 200) {
         alert(`새로운 승객을 등록했습니다.`);
       } else {
-        alert(`[Error] ${res.statusText}`);
+        throw error;
       }
+    } catch (error) {
+      alert('[ERROR] error concurrent!');
     }
   };
 

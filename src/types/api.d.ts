@@ -24,3 +24,16 @@ type MaskingType = {
   maskingStart: number;
   maskingEnd: number;
 };
+
+type FetchError = {
+  status: number;
+  statusText: string;
+  data: ErrorResponse;
+  isFetchError: boolean;
+};
+
+type ErrorResponse = {
+  code: string;
+  message: string;
+  timeStamp: string;
+};
