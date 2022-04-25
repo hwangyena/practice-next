@@ -35,5 +35,5 @@
 [/find-pwd](src/pages/find-pwd.tsx) 비밀번호 찾기(뒤로가기&새로고침&라우터 이동 방지)
 [/change-pwd](src/pages/change-pwd.tsx) 비밀번호 변경하기(Reg 학습)
 [/passenger](src/pages/passenger.tsx) GET + POST + swr  
-[/passenger](src/pages/passenger-query.tsx) GET + POST + react-query  
-[/passenger](src/pages/profile.tsx) custom context menu
+[/passenger-query](src/pages/passenger-query.tsx) GET + POST + react-query  
+[/profile](src/pages/profile.tsx) custom context menu
