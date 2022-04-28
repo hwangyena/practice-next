@@ -1,6 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useReducer, useRef, useState } from 'react';
+import { useGlobal } from 'src/lib/hooks';
 import { GlobalStore } from '../store';
 import styles from '../styles/Home.module.css';
 
@@ -55,13 +56,15 @@ const Home: NextPage = () => {
   const id = 'react123';
   const tel = '010-1234-5678';
 
+  const { data, setCount, setName } = useGlobal();
+  const [globalName, setGlobalName] = useState('');
+
   const [profile, dispatchProfile] = useReducer(profileReducer, profileInitial);
   const [pwd, setPwd] = useState('');
   const [pwdConfim, setPwdConfirm] = useState('');
+  const [validation, setValidation] = useState<{ message: string; pass: boolean }>({ message: '', pass: true });
 
   const inputPwd = useRef<HTMLInputElement>(null);
-
-  const [validation, setValidation] = useState<{ message: string; pass: boolean }>({ message: '', pass: true });
 
   const onChangeProfile = (name: keyof UserType, value: string) => {
     dispatchProfile({ name, type: 'UPDATE', value });
@@ -198,6 +201,17 @@ const Home: NextPage = () => {
           </div>
 
           <div>길이: {pwd.length}</div>
+        </section>
+        <hr />
+        <section>
+          <h3>SWR 글로벌로 쓰기</h3>
+          <span>{data?.name}</span>
+          <input type="text" value={globalName} onChange={(e) => setGlobalName(e.target.value)} />
+          <button onClick={() => setName(globalName)}>변경하기</button>
+          <br />
+          <button onClick={() => setCount('decrease')}>-</button>
+          <span>{data?.count}</span>
+          <button onClick={() => setCount('increase')}>+</button>
         </section>
       </main>
     </div>
