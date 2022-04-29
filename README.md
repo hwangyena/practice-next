@@ -3,6 +3,8 @@
 
 ## 학습 내용
 
+---
+
 ### Framework
 
 - React
@@ -27,8 +29,13 @@
 ### ETC
 
 - swgr
+- typescript
+
+<br/><br/>
 
 ## File Structure
+
+---
 
 [/](src/pages/index.tsx) unstated-next, password REG  
 [/login](src/pages/login.tsx) 로그인 페이지(SWR)  
@@ -37,3 +44,11 @@
 [/passenger](src/pages/passenger.tsx) GET + POST + swr  
 [/passenger-query](src/pages/passenger-query.tsx) GET + POST + react-query  
 [/profile](src/pages/profile.tsx) custom context menu
+
+<br/><br/>
+
+## 참고 URL
+
+---
+
+[Typescript 고급타입](https://velog.io/@zeros0623/TypeScript-%EA%B3%A0%EA%B8%89-%ED%83%80%EC%9E%85)
