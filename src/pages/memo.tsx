@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { MemoMovie, MemoText } from 'src/components/memo';
+import { MemoMovieList, MemoText } from 'src/components/memo';
 
 let movieId = 1;
 export type Movie = {
@@ -17,21 +17,20 @@ const initialMovie: Movie = {
 export default function MemoPage() {
   const [movies, setMovies] = useState<Movie[]>([initialMovie]);
 
-  const onAddMovie = useCallback(({ content, title }: Omit<Movie, 'id'>) => {
+  const onAddMovie = ({ content, title }: Omit<Movie, 'id'>) => {
     setMovies((p) => [...p, { title, content, id: movieId++ }]);
-  }, []);
+  };
 
-  const onDeleteMovie = useCallback((id: number) => {
+  const onDeleteMovie = (id: number) => {
     setMovies((p) => p.filter((v) => v.id !== id));
-  }, []);
+  };
 
   return (
     <>
       <h1>React 성능 향상</h1>
+      <h3>총 영화 수 : {movies.length}</h3>
       <MemoText {...{ onAddMovie }} />
-      {movies.map((v, i) => (
-        <MemoMovie movie={v} onDeleteMovie={onDeleteMovie} key={i} />
-      ))}
+      <MemoMovieList {...{ movies, onDeleteMovie }} />
     </>
   );
 }
