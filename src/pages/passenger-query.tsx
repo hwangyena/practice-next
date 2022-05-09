@@ -1,9 +1,8 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import { QueryClient, QueryClientProvider, useQuery, useQueryClient } from 'react-query';
+import React from 'react';
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import { Loading } from 'src/components/custom';
 import { PassengerAddButton, PassengerTable } from 'src/components/passenger';
-import { getFetch, getFetchInQuery } from 'src/lib/api';
+import { getFetch } from 'src/lib/api';
 import { PassengerStore } from 'src/store';
 
 type Props = {};

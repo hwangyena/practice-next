@@ -11,7 +11,7 @@ const square = {
 
 type Shape = typeof circle | typeof square;
 
-function asConst(value: Shape) {
+export function asConst(value: Shape) {
   switch (value.type) {
     case 'circle':
       return value.radius;

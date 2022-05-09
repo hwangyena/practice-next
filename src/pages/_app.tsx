@@ -6,6 +6,7 @@ import { getFetch } from 'src/lib/api';
 import { swrLogger } from 'src/lib/endpoints';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  console.log('pageProps', pageProps);
   return (
     <GlobalStore.Provider>
       <SWRConfig
