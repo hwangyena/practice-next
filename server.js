@@ -13,7 +13,6 @@ app
 
     // const HOST = 'https://gorest.co.in/public';
     const HOST = 'https://api.instantwebtools.net'; //free-api
-    const HOST_SKP = 'https://workspace-dev.rbdialog.co.kr'; //free-api
     const PORT = process.env.PORT || 3000;
 
     server.use(
@@ -28,7 +27,7 @@ app
     server.use(
       '/rest-api/*',
       createProxyMiddleware({
-        target: HOST_SKP,
+        target: HOST,
         changeOrigin: true,
       })
     );
