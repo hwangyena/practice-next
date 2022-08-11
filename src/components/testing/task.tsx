@@ -1,7 +1,8 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 
+type Task = { id: string; title: string; state: 'TASK_INBOX' | 'TASK_PINNED' | 'TASK_ARCHIVED'; updatedAt: Date };
 type Props = {
-  task: { id: number; title: string; state: string };
+  task: Partial<Task>;
   onArchiveTask: () => void;
 };
 
