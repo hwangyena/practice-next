@@ -1,19 +1,34 @@
+import Image from 'next/image';
 import { ChangeEvent, useState } from 'react';
-import { fileToImage, getFileSize, imageCompress } from 'src/lib/utils/filecompress';
+import { fileToImage, getFileSize, imageCompress, isFileSizeOverflow } from 'src/lib/utils/filecompress';
 
 export default function FileSizePage() {
-  const [files, setFiles] = useState<{ file: File; imageSrc: string | ArrayBuffer; id: number }[]>([]);
-  const [resizeFiles, setResizeFiles] = useState<{ file: File; imageSrc: string | ArrayBuffer; id: number }[]>([]);
+  const [files, setFiles] = useState<{ file: File; imageSrc: string; id: number }[]>([]);
+  const [resizeFiles, setResizeFiles] = useState<{ file: File; imageSrc: string; id: number }[]>([]);
 
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
 
-    fileToImage(file, (src) => {
-      setFiles([...files, { file, imageSrc: src, id: files.length }]);
-      imageCompress(file, (file) => {
-        setResizeFiles([...resizeFiles, { file, imageSrc: src, id: resizeFiles.length }]);
+    if (!/image/i.test(file.type)) {
+      new Error(`File is not an image.`);
+      return;
+    }
+
+    const src = fileToImage(file);
+
+    setFiles([...files, { file, imageSrc: src, id: files.length }]);
+
+    if (isFileSizeOverflow(file.size, 3, 'MB')) {
+      imageCompress(file, (resizeFile) => {
+        console.log('[CALLBACK] resizeFile', resizeFile);
+        setResizeFiles([
+          ...resizeFiles,
+          { file: resizeFile, imageSrc: fileToImage(resizeFile), id: resizeFiles.length },
+        ]);
       });
-    });
+    } else {
+      setResizeFiles([...resizeFiles, { file, imageSrc: fileToImage(file), id: resizeFiles.length }]);
+    }
   };
 
   return (
@@ -24,7 +39,9 @@ export default function FileSizePage() {
         <div key={index} className="flex gap-5 mt-12">
           <section>
             <h3>기존 파일</h3>
-            <img src={file.imageSrc as string} />
+            <div className="w-[500px] h-[500px] relative">
+              <Image src={file.imageSrc} alt="image" layout="fill" />
+            </div>
             <p>
               <b>이름 </b>
               {file.file.name}
@@ -36,7 +53,9 @@ export default function FileSizePage() {
           </section>
           <section>
             <h3>수정 파일</h3>
-            <img src={file.imageSrc as string} />
+            <div className="w-[500px] h-[500px] relative">
+              {resizeFiles[index]?.imageSrc && <Image src={resizeFiles[index].imageSrc} alt="image" layout="fill" />}
+            </div>
             <p>
               <b>이름 </b>
               {resizeFiles[index]?.file.name}

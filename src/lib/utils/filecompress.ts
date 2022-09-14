@@ -1,29 +1,21 @@
+type SizeUnit = 'KB' | 'MB' | 'GB' | 'TB';
+
 export const getFileSize = (size: number) => {
   const byteUnits = ['KB', 'MB', ' GB', 'TB'];
 
   for (let i = 0; i < byteUnits.length; i++) {
     size = Math.floor(size / 1024);
 
-    if (size < 1024) return size.toFixed(1) + byteUnits[i];
+    if (size < 1024) return size.toFixed(2) + byteUnits[i];
   }
 
   return -1;
 };
 
-export const fileToImage = (file: File, callback: (src: string | ArrayBuffer) => void) => {
-  const reader = new FileReader();
+export const fileToImage = (file: File) => URL.createObjectURL(file);
 
-  reader.onload = (e) => {
-    callback(e.target.result);
-  };
-
-  reader.readAsDataURL(file);
-};
-
-type SizeUnit = 'KB' | 'MB' | 'GB' | 'TB';
 export const isFileSizeOverflow = (fileSize: number, maxFileSize: number, byte: SizeUnit = 'KB') => {
-  const unit = ['Byte', 'KB', 'MB', 'GB', 'TB'].indexOf(byte) + 1;
-
+  const unit = ['KB', 'MB', 'GB', 'TB'].indexOf(byte) + 1;
   const maxSize = Math.pow(1024, unit) * maxFileSize;
 
   return !unit || maxSize < fileSize;
@@ -49,41 +41,34 @@ const resizeImage = (image: HTMLImageElement) => {
   canvas.height = height;
 
   const ctx = canvas.getContext('2d');
-  ctx.drawImage(image, 0, 0, MAX_WIDTH, MAX_HEIGHT); //// width, height 확인
+  ctx.drawImage(image, 0, 0, MAX_WIDTH, MAX_HEIGHT);
 
   return canvas.toDataURL('image/jpeg', 0.7); //quality 70
 };
 
-const convertURLtoFIle = async (url: string) => {
+const convertURLtoFile = async (url: string, fileName: string) => {
   const response = await fetch(url);
   const data = await response.blob();
 
-  return new File([data], 'test');
+  return new File([data], fileName);
 };
 
 export const imageCompress = (file: File, callback: (file: File) => void) => {
-  if (!/image/i.test(file.type)) {
-    new Error(`File is not an image.`);
-    return;
-  }
-
   const reader = new FileReader();
   reader.readAsArrayBuffer(file);
 
   reader.onload = (event) => {
     const blob = new Blob([event.target.result]); //create blob
-    window.URL = window.URL || window.webkitURL;
-    const blobURL = window.URL.createObjectURL(blob); //get URL
+    const blobURL = URL.createObjectURL(blob); //get URL
 
-    const fr = new FileReader();
     const image = new Image();
     image.src = blobURL;
 
     image.onload = async () => {
-      const resize = await convertURLtoFIle(resizeImage(image));
-
-      console.log('resize', resize);
+      const resize = await convertURLtoFile(resizeImage(image), file.name);
       callback(resize);
+
+      URL.revokeObjectURL(blobURL);
     };
   };
 };
