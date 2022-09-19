@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { ChangeEvent, useState } from 'react';
-import { fileToImage, getFileSize, imageCompress, isFileSizeOverflow } from 'src/lib/utils/filecompress';
+import { fileToImage, getFileSize, heifConvert, imageCompress, isFileSizeOverflow } from 'src/lib/utils/filecompress';
 
 export default function FileSizePage() {
   const [files, setFiles] = useState<{ file: File; imageSrc: string; id: number }[]>([]);
@@ -9,6 +9,7 @@ export default function FileSizePage() {
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
 
+    console.log('file', file);
     if (!/image/i.test(file.type)) {
       new Error(`File is not an image.`);
       return;
@@ -18,9 +19,19 @@ export default function FileSizePage() {
 
     setFiles([...files, { file, imageSrc: src, id: files.length }]);
 
-    if (isFileSizeOverflow(file.size, 3, 'MB')) {
+    if (/heif/.test(file.type)) {
+      heifConvert(file, (resizeFile) => {
+        console.log('resizeFile', resizeFile);
+        setResizeFiles([
+          ...resizeFiles,
+          { file: resizeFile, imageSrc: fileToImage(resizeFile), id: resizeFiles.length },
+        ]);
+      });
+      return;
+    }
+
+    if (isFileSizeOverflow(file.size, 1, 'MB')) {
       imageCompress(file, (resizeFile) => {
-        console.log('[CALLBACK] resizeFile', resizeFile);
         setResizeFiles([
           ...resizeFiles,
           { file: resizeFile, imageSrc: fileToImage(resizeFile), id: resizeFiles.length },
