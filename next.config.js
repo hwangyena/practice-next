@@ -9,14 +9,6 @@ const nextConfig = {
 
     return config;
   },
-  // rewrites: async () => {
-  //   return [
-  //     {
-  //       source: '/api/*',
-  //       destination: 'https://api.instantwebtools.net',
-  //     },
-  //   ];
-  // },
 };
 
 module.exports = nextConfig;
